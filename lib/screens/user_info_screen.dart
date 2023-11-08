@@ -8,9 +8,9 @@ class UserInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Información del Usuario'),
+        title: Text('Información del Usuario'),
       ),
-      body: const Center(
+      body: Center(
         child: Text('Aquí van los detalles del usuario.'),
       ),
     );

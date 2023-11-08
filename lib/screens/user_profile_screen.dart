@@ -17,8 +17,8 @@ class UserProfileScreen extends StatelessWidget {
 
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Perfil de Usuario')),
-        body: const Center(child: Text('No hay un usuario autenticado. Inicie sesión.')),
+        appBar: AppBar(title: Text('Perfil de Usuario')),
+        body: Center(child: Text('No hay un usuario autenticado. Inicie sesión.')),
       );
     }
 
@@ -37,19 +37,19 @@ class UserProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Perfil de Usuario'),
+        title: Text('Perfil de Usuario'),
         actions: [
           CircleAvatar(
             backgroundImage: NetworkImage(user.photoURL ?? 'https://via.placeholder.com/150'),
           ),
-          const SizedBox(width: 16), 
+          SizedBox(width: 16), 
         ],
       ),
       body: FutureBuilder(
         future: getUsername(user.uid),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -61,13 +61,13 @@ class UserProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Nombre de usuario: $username', style: const TextStyle(fontSize: 18)),
-                const SizedBox(height: 8),
-                Text('Correo electrónico: ${user.email ?? 'Correo no disponible'}', style: const TextStyle(fontSize: 18)),
-                const SizedBox(height: 24),
+                Text('Nombre de usuario: $username', style: TextStyle(fontSize: 18)),
+                SizedBox(height: 8),
+                Text('Correo electrónico: ${user.email ?? 'Correo no disponible'}', style: TextStyle(fontSize: 18)),
+                SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () => signOut(context),
-                  child: const Text('Cerrar sesión'),
+                  child: Text('Cerrar sesión'),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red, // Color del botón
                     onPrimary: Colors.white, // Color del texto
