@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../models/lost_item_model.dart';
+import '../../../models/lost_item_model.dart';
 
 class LostItemFormController {
   final ImagePicker _picker = ImagePicker();
@@ -48,7 +48,7 @@ class LostItemFormController {
       required String description,
       required String location,
       String? imageUrl,
-      required String phoneNumber}) async {
+      required String phone}) async {
     final uid = _auth.currentUser!.uid;
     await _firestore.collection('lost_items').add({
       'name': title,
@@ -58,7 +58,7 @@ class LostItemFormController {
       'timestamp': FieldValue.serverTimestamp(),
       'userId': uid,
       'userEmail': _auth.currentUser!.email!,
-      'phoneNumber': phoneNumber,
+      'phone': phone,
     });
   }
 

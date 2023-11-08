@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LostItem {
-  final String id;
+  final String? id;
   final String name;
   final String description;
   final String location;
   final String? imageUrl;
   final DateTime? timestamp;
-  final String userId;
-  final String userEmail;
+  final String? userId;
+  final String? userEmail;
   final String phone;
 
   LostItem({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.location,
     this.imageUrl,
     this.timestamp,
-    required this.userId,
-    required this.userEmail,
+    this.userId,
+    this.userEmail,
     required this.phone
   });
 
