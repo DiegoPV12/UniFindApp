@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'lost_item_form_controller.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../models/lost_item_model.dart';
+import 'bloc/lost_item_bloc.dart';
+import 'bloc/lost_item_event.dart';
+import 'bloc/lost_item_state.dart';
 import 'package:image_picker/image_picker.dart';
 
 class LostItemForm extends StatefulWidget {
@@ -10,7 +14,6 @@ class LostItemForm extends StatefulWidget {
 }
 
 class _LostItemFormState extends State<LostItemForm> {
-  final LostItemFormController _controller = LostItemFormController();
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
@@ -19,6 +22,28 @@ class _LostItemFormState extends State<LostItemForm> {
 
   @override
   Widget build(BuildContext context) {
+    final lostItemBloc = BlocProvider.of<LostItemBloc>(context);
+    InputDecoration textFieldDecoration(String hint) => InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(
+              color: Colors.grey), 
+          fillColor: const Color(0xFFECDFE4),
+          filled: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        
+        );
+
+    ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Objetos Perdidos'),
@@ -27,164 +52,125 @@ class _LostItemFormState extends State<LostItemForm> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: const Text('Nombre del objeto'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: _controller.validateItemName,
+          child: BlocConsumer<LostItemBloc, LostItemState>(
+            listener: (context, state) {
+              if (state is LostItemSubmitSuccessState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Objeto Reportado')),
+                );
+                _formKey.currentState?.reset();
+              } else if (state is LostItemSubmitFailedState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.error)),
+                );
+              }
+            },
+            builder: (context, state) {
+              return Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        decoration: textFieldDecoration('Nombre del objeto'),
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Este campo es obligatorio'
+                            : null,
                         onSaved: (value) => _title = value!,
                       ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: const Text('Número de teléfono'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: _controller.validatePhoneNumber,
-                        onSaved: (value) => _phoneNumber = value!,
-                      ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: const Text('Descripción'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: _controller.validateItemDescription,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        decoration: textFieldDecoration('Descripción'),
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Este campo es obligatorio'
+                            : null,
                         onSaved: (value) => _description = value!,
                       ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: const Text('Lugar'),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xFFECDFE4),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) =>
-                            value!.isEmpty ? 'El lugar es obligatorio' : null,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        decoration: textFieldDecoration('Lugar'),
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Este campo es obligatorio'
+                            : null,
                         onSaved: (value) => _location = value!,
                       ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextFormField(
+                        decoration: textFieldDecoration('Número de teléfono'),
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Este campo es obligatorio'
+                            : null,
+                        onSaved: (value) => _phoneNumber = value!,
                       ),
-                      Row(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              await _controller.getImage(ImageSource.camera);
-                              setState(() {});
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Icon(Icons.camera_alt),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.camera),
+                            label: const Text('Cámara'),
+                            style: buttonStyle,
+                            onPressed: () => lostItemBloc
+                                .add(PickImageEvent(ImageSource.camera)),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                await _controller.getImage(ImageSource.gallery);
-                                setState(() {});
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Icon(Icons.photo_library),
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: ElevatedButton.icon(
+                              icon: const Icon(Icons.photo_library),
+                              label: const Text('Galería'),
+                              style: buttonStyle,
+                              onPressed: () => lostItemBloc
+                                  .add(PickImageEvent(ImageSource.gallery)),
                             ),
                           ),
                         ],
                       ),
-                      
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              final imageUrl =
-                                  await _controller.uploadImageToFirebase();
-                              await _controller.saveLostItemToFirestore(
-                                  title: _title,
-                                  description: _description,
-                                  location: _location,
-                                  imageUrl: imageUrl,
-                                  phoneNumber: _phoneNumber);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Objeto Reportado'),
-                                ),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'REPORTAR OBJETO',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: ElevatedButton(
+                        onPressed: state is LostItemSubmittingState
+                            ? null
+                            : () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  lostItemBloc.add(SubmitLostItemEvent(
+                                    LostItem(
+                                      name: _title,
+                                      description: _description,
+                                      location: _location,
+                                      phone: _phoneNumber,
+                                    ),
+                                  ));
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color.fromRGBO(129, 40, 75, 1),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
+                        child: state is LostItemSubmittingState
+                            ? const CircularProgressIndicator()
+                            : const Text('REPORTAR OBJETO',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
