@@ -98,14 +98,14 @@ class LostItemListPage extends StatelessWidget {
   final List<LostItem> items;
   final String currentUserEmail;
 
-  LostItemListPage({Key? key, required this.items, required this.currentUserEmail})
+  const LostItemListPage({Key? key, required this.items, required this.currentUserEmail})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Objetos Perdidos'),
+        title: const Text('Objetos Perdidos'),
       ),
       body: ListView.builder(
         itemCount: items.length,

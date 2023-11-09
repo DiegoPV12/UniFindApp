@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1068985836820:android:4de838599b2ba05c550e01",
+        "mobilesdk_app_id": "1:1068985836820:android:47ed8640815f2c02550e01",
         "android_client_info": {
-          "package_name": "com.example.unifind"
+          "package_name": "com.unifindapp.unifind"
         }
       },
       "oauth_client": [],

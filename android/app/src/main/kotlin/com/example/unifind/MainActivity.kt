@@ -1,4 +1,4 @@
-package com.example.unifind
+package com.unifindapp.unifind
 
 import io.flutter.embedding.android.FlutterActivity
 

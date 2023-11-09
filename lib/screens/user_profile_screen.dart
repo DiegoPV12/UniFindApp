@@ -67,14 +67,13 @@ class UserProfileScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () => signOut(context),
-                  child: const Text('Cerrar sesión'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // Color del botón
-                    onPrimary: Colors.white, // Color del texto
+                    foregroundColor: Colors.white, backgroundColor: Colors.red, // Color del texto
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
+                  child: const Text('Cerrar sesión'),
                 ),
               ],
             ),

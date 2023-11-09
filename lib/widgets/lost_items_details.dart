@@ -7,7 +7,7 @@ class LostItemDetailsPage extends StatelessWidget {
   final LostItem item;
   final String currentUserEmail; // Para verificar si el usuario actual es el creador del objeto
 
-  LostItemDetailsPage({
+  const LostItemDetailsPage({
     Key? key,
     required this.item,
     required this.currentUserEmail,
@@ -47,7 +47,7 @@ class LostItemDetailsPage extends StatelessWidget {
       // Navegar de vuelta a la lista de objetos perdidos y mostrar mensaje
       Navigator.of(context).pop(); // Regresa a la pantalla anterior
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Objeto eliminado con éxito'),
           behavior: SnackBarBehavior.floating,
         ),
@@ -68,10 +68,10 @@ class LostItemDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Objeto'),
+        title: const Text('Detalles del Objeto'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             if (item.imageUrl != null)
@@ -81,26 +81,26 @@ class LostItemDetailsPage extends StatelessWidget {
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               item.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               item.description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16.0,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Row(
               children: [
-                Icon(Icons.location_on),
-                SizedBox(width: 8.0),
+                const Icon(Icons.location_on),
+                const SizedBox(width: 8.0),
                 Text(item.location),
               ],
             ),
@@ -109,15 +109,15 @@ class LostItemDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time),
-                    SizedBox(width: 8.0),
+                    const Icon(Icons.access_time),
+                    const SizedBox(width: 8.0),
                     Text(
                       '${item.timestamp!.day}/${item.timestamp!.month}/${item.timestamp!.year} ${item.timestamp!.hour}:${item.timestamp!.minute}',
                     ),
                   ],
                 ),
               ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               "Contacto: ${item.userEmail}",
               style: TextStyle(
@@ -125,18 +125,18 @@ class LostItemDetailsPage extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  icon: Icon(Icons.message),
-                  label: Text('WhatsApp'),
+                  icon: const Icon(Icons.message),
+                  label: const Text('WhatsApp'),
                   onPressed: _contactViaWhatsApp,
                 ),
                 ElevatedButton.icon(
-                  icon: Icon(Icons.call),
-                  label: Text('Llamar'),
+                  icon: const Icon(Icons.call),
+                  label: const Text('Llamar'),
                   onPressed: _makePhoneCall,
                 ),
               ],
@@ -146,8 +146,8 @@ class LostItemDetailsPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Center( // Centro el botón en la pantalla
                   child: ElevatedButton.icon(
-                    icon: Icon(Icons.find_in_page),
-                    label: Text('Marcar objeto como encontrado'),
+                    icon: const Icon(Icons.find_in_page),
+                    label: const Text('Marcar objeto como encontrado'),
                     onPressed: () => _deleteItem(context), // Cambia la función llamada aquí
                   ),
                 ),
